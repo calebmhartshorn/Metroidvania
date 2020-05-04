@@ -1,13 +1,41 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Assets/Animations/Player_SS.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Enviroment/Light.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Sounds/Laser_1.wav" type="AudioStream" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 4, 23 )
 
 [sub_resource type="Animation" id=2]
-resource_name = "Crouch"
+resource_name = "Climb"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ Vector2( 2, 5 ), Vector2( 3, 5 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ Vector2( 0, -8 ), Vector2( 0, -16 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
 length = 0.01
 step = 0.01
 tracks/0/type = "value"
@@ -23,8 +51,7 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 4 ) ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "Crouch_Transition"
+[sub_resource type="Animation" id=4]
 length = 0.07
 step = 0.01
 tracks/0/type = "value"
@@ -40,8 +67,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 4 ) ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "Crouch_Turn"
+[sub_resource type="Animation" id=5]
 length = 0.15
 step = 0.05
 tracks/0/type = "value"
@@ -57,7 +83,7 @@ tracks/0/keys = {
 "values": [ Vector2( 3, 2 ), Vector2( 4, 2 ), Vector2( 5, 2 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.2
 step = 0.05
 tracks/0/type = "value"
@@ -73,7 +99,7 @@ tracks/0/keys = {
 "values": [ Vector2( 3, 3 ), Vector2( 3, 3 ) ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=7]
 length = 0.01
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:frame_coords")
@@ -88,7 +114,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 1 ) ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
 length = 0.05
 step = 0.05
 tracks/0/type = "value"
@@ -104,8 +130,7 @@ tracks/0/keys = {
 "values": [ Vector2( 1, 3 ), Vector2( 3, 3 ) ]
 }
 
-[sub_resource type="Animation" id=8]
-resource_name = "Jump_Crouch"
+[sub_resource type="Animation" id=9]
 length = 0.05
 step = 0.01
 tracks/0/type = "value"
@@ -121,8 +146,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 3 ) ]
 }
 
-[sub_resource type="Animation" id=9]
-resource_name = "Ledge_Hang"
+[sub_resource type="Animation" id=10]
 length = 0.01
 step = 0.01
 tracks/0/type = "value"
@@ -136,23 +160,6 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 1,
 "values": [ Vector2( 1, 5 ) ]
-}
-
-[sub_resource type="Animation" id=10]
-length = 0.5
-loop = true
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:frame_coords")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
-"update": 1,
-"values": [ Vector2( 0, 0 ), Vector2( 1, 0 ), Vector2( 2, 0 ), Vector2( 3, 0 ), Vector2( 4, 0 ), Vector2( 5, 0 ), Vector2( 6, 0 ), Vector2( 7, 0 ), Vector2( 8, 0 ), Vector2( 9, 0 ) ]
 }
 
 [sub_resource type="Animation" id=11]
@@ -169,10 +176,27 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
-"values": [ Vector2( 0, 7 ), Vector2( 1, 7 ), Vector2( 2, 7 ), Vector2( 3, 7 ), Vector2( 4, 7 ), Vector2( 5, 7 ), Vector2( 6, 7 ), Vector2( 7, 7 ), Vector2( 8, 7 ), Vector2( 9, 7 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( 1, 0 ), Vector2( 2, 0 ), Vector2( 3, 0 ), Vector2( 4, 0 ), Vector2( 5, 0 ), Vector2( 6, 0 ), Vector2( 7, 0 ), Vector2( 8, 0 ), Vector2( 9, 0 ) ]
 }
 
 [sub_resource type="Animation" id=12]
+length = 0.5
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Vector2( 0, 7 ), Vector2( 1, 7 ), Vector2( 2, 7 ), Vector2( 3, 7 ), Vector2( 4, 7 ), Vector2( 5, 7 ), Vector2( 6, 7 ), Vector2( 7, 7 ), Vector2( 8, 7 ), Vector2( 9, 7 ) ]
+}
+
+[sub_resource type="Animation" id=13]
 length = 0.15
 step = 0.05
 tracks/0/type = "value"
@@ -188,7 +212,7 @@ tracks/0/keys = {
 "values": [ Vector2( 0, 2 ), Vector2( 1, 2 ), Vector2( 2, 2 ) ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=14]
 length = 0.01
 step = 0.01
 tracks/0/type = "value"
@@ -215,21 +239,22 @@ shape = SubResource( 1 )
 texture = ExtResource( 1 )
 vframes = 10
 hframes = 10
-frame = 50
+frame = 31
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
-anims/Crouch = SubResource( 2 )
-anims/Crouch_Transition = SubResource( 3 )
-anims/Crouch_Turn = SubResource( 4 )
-anims/Fall = SubResource( 5 )
-anims/Idle = SubResource( 6 )
-anims/Jump = SubResource( 7 )
-anims/Jump_Crouch = SubResource( 8 )
-anims/Ledge_Hang = SubResource( 9 )
-anims/Run = SubResource( 10 )
-"anims/Run 2" = SubResource( 11 )
-anims/Turn = SubResource( 12 )
-anims/Wall_Hang = SubResource( 13 )
+anims/Climb = SubResource( 2 )
+anims/Crouch = SubResource( 3 )
+anims/Crouch_Transition = SubResource( 4 )
+anims/Crouch_Turn = SubResource( 5 )
+anims/Fall = SubResource( 6 )
+anims/Idle = SubResource( 7 )
+anims/Jump = SubResource( 8 )
+anims/Jump_Crouch = SubResource( 9 )
+anims/Ledge_Hang = SubResource( 10 )
+anims/Run = SubResource( 11 )
+"anims/Run 2" = SubResource( 12 )
+anims/Turn = SubResource( 13 )
+anims/Wall_Hang = SubResource( 14 )
 
 [node name="Ray_Top" type="RayCast2D" parent="."]
 position = Vector2( 0, -24 )
@@ -255,3 +280,18 @@ cast_to = Vector2( 8, 0 )
 position = Vector2( 0, 16 )
 enabled = true
 cast_to = Vector2( 0, 24 )
+
+[node name="Ray_Down_Long" type="RayCast2D" parent="."]
+position = Vector2( 0, 16 )
+enabled = true
+cast_to = Vector2( 0, 48 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 4.54543, -20.4545 )
+texture = ExtResource( 3 )
+texture_scale = 0.5
+energy = 0.7
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+volume_db = -19.418

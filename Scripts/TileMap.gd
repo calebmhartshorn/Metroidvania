@@ -4,7 +4,9 @@ var Light_Tank = preload("res://Scenes/Light_Tank.tscn")
 var Gauge_1 = preload("res://Scenes/Light_Gauge_1.tscn")
 
 func _ready():
-
+	
+	#show()
+	
 	var size_x = get_cell_size().x
 	var size_y = get_cell_size().y
 	var tileset = get_tileset()

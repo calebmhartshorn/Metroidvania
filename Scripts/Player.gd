@@ -2,19 +2,22 @@ extends KinematicBody2D
 
 var gravity = 14.6666
 var speed = 70
-var jump_vel = 200
+var jump_vel = 370#200
 var slip = 43
 var wall_jump_cooldown_limit = 0.2
 var ray_length = 5
 var smash_vel = 600
 
-var jump_cooldown = 0
+#var jump_cooldown = 0
 var vel = Vector2()
 var crouch = false
 var last_jump_x = 0
 var wall_slide = false
 var ledge_hang = false
 var wall_jump_cooldown = 0
+var jump_grace_timer = 0
+var jump_grace = 0.06
+var shoot_cooldown = 0
 
 onready var anim = get_node("Sprite/AnimationPlayer")
 onready var sprite = get_node("Sprite")
@@ -23,11 +26,17 @@ onready var ray_bottom = get_node("Ray_Bottom")
 onready var ray_down = get_node("Ray_Down")
 onready var ray_mid = get_node("Ray_Mid")
 onready var ray_right = get_node("Ray_Right")
+onready var ray_down_long = get_node("Ray_Down_Long")
+
+var Laser = preload("res://Scenes/Laser.tscn")
 
 func _ready():
 	anim.connect("animation_finished", self, "playNextAnim")
 
 func get_input():
+	
+	if Input.is_action_just_pressed("respawn"):
+		position = Vector2(256,88)
 	
 	# Right
 	if Input.is_action_pressed('ui_right') and (wall_jump_cooldown > wall_jump_cooldown_limit or sprite.flip_h == false):
@@ -90,9 +99,14 @@ func get_input():
 				if anim.get_assigned_animation() != "Jump" and anim.get_assigned_animation() != "Turn" and anim.get_assigned_animation() != "Jump_Crouch":
 					anim.play("Turn", -1, 2.0)
 	
+	if ledge_hang and Input.is_action_pressed("ui_up"):
+		anim.play("Climb")
+		ledge_hang = false
+	
 	# Jump
 	if Input.is_action_just_pressed('jump'):
-		if (is_on_floor()):
+		if (is_on_floor() or jump_grace_timer < jump_grace):
+			
 			crouch = false
 			if (anim.get_assigned_animation() != "Jump_Crouch"):
 				anim.play("Jump_Crouch")
@@ -105,12 +119,12 @@ func get_input():
 		elif wall_slide or ledge_hang:
 			wall_slide = false
 			ledge_hang = false
-			vel.y = -jump_vel * 1.7
+			vel.y = -jump_vel * 0.91#1.7
 			if ray_right.is_colliding():
-				vel.x = -jump_vel * 3
+				vel.x = -jump_vel * 1.6#3
 				sprite.set_flip_h(true)
 			else:
-				vel.x = jump_vel * 3
+				vel.x = jump_vel * 1.6#3
 				sprite.set_flip_h(false)
 			anim.play("Jump")
 			last_jump_x = position.x
@@ -122,8 +136,29 @@ func get_input():
 			wall_jump_cooldown = 0
 	
 	# Long Jump
-	if Input.is_action_pressed("jump"):
-		vel.y += -jump_vel * jump_cooldown
+	#if Input.is_action_pressed("jump"):
+	#	pass# vel.y += -jump_vel * jump_cooldown
+		
+	if (not Input.is_action_pressed("jump")) and vel.y < 0 :
+		vel.y *= 0.95
+	
+	if Input.is_action_just_pressed("Shoot") and shoot_cooldown > .15:
+		shoot_cooldown = 0
+		get_node("AudioStreamPlayer").play()
+		var node = Laser.instance()
+		# Camera shake
+		if sprite.flip_h:
+			get_node("../CameraAnchor").pos.x -= 3
+			node.position.x = position.x - 16
+			node.flip_h = true
+		else:
+			get_node("../CameraAnchor").pos.x += 3
+			node.position.x = position.x + 16
+		if crouch:
+			node.position.y = position.y + 10
+		else:
+			node.position.y = position.y - 6
+		get_node('../Bullets').add_child(node)
 	
 	if is_on_floor() and round(vel.y) >= 0.0:
 		# Run
@@ -151,7 +186,7 @@ func get_input():
 					anim.play("Idle")
 					wall_slide = false	
 	else:
-		if anim.assigned_animation != "Fall" and wall_slide == false and vel.y > 0: 
+		if anim.assigned_animation != "Fall" and wall_slide == false and vel.y > 0 and jump_grace_timer > jump_grace: 
 			anim.play("Fall")
 
 # Transition Animations
@@ -160,18 +195,27 @@ func playNextAnim(finished):
 		anim.play("Idle")
 	if(finished == "Jump_Crouch"):
 		anim.play("Jump")
-		jump_cooldown = 1
+		#jump_cooldown = 1
 		vel.y = -jump_vel;
 
 
 
 func _physics_process(delta):
-	jump_cooldown = max(0, jump_cooldown * 27 * delta)
+	#jump_cooldown = max(0, jump_cooldown * 27 * delta)
 	wall_jump_cooldown += delta
+	shoot_cooldown += delta
+	
+	if is_on_floor():
+		jump_grace_timer = 0
+	else:
+		jump_grace_timer += delta
 	
 	get_input()
 	
-	vel.x *= 0.71666 #slip * delta
+	if(Input.is_action_pressed('ui_right') or Input.is_action_pressed('ui_left')):
+		vel.x *= 0.71666
+	else:
+		vel.x *= 0.5 #slip * delta
 	
 	if wall_slide:
 		vel.y += gravity  * 0.1
@@ -193,29 +237,31 @@ func _physics_process(delta):
 			
 			if ray_right.is_colliding():
 				sprite.set_flip_h(false)
+				#position.x = 16 * floor(position.x / 16) + 8 + 4
 				position.x = 16 * floor(position.x / 16) + 8 + 4
 			else:
 				sprite.set_flip_h(true)
+				#position.x = 16 * floor(position.x / 16) + 8 - 4
 				position.x = 16 * floor(position.x / 16) + 8 - 4
 	else:
 		wall_slide = false
 	
 	#Ledge Grab
-	if (not is_on_floor()) and (not ray_top.is_colliding()) and ray_mid.is_colliding() and wall_jump_cooldown > 0.1  and (not ray_down.is_colliding()):
-		
-		anim.play("Ledge_Hang")
-		vel.y=0
-		vel.x = 0
-		ledge_hang = true
-		
-		if ray_right.is_colliding():
-			sprite.set_flip_h(false)
-			position.x = 16 * floor(position.x / 16) + 8 + 4
-		else:
-			sprite.set_flip_h(true)
-			position.x = 16 * floor(position.x / 16) + 8 - 4
-		
-		position.y = 16 * ceil((position.y + 9) / 16) - 9 - 5
+	if (not is_on_floor()) and (not ray_top.is_colliding()) and ray_mid.is_colliding() and wall_jump_cooldown > 0.1 and anim.assigned_animation != "Climb":
+		if (not ray_down_long.is_colliding()):
+			anim.play("Ledge_Hang")
+			vel.y=0
+			vel.x = 0
+			ledge_hang = true
+			
+			if ray_right.is_colliding():
+				sprite.set_flip_h(false)
+				position.x = 16 * floor(position.x / 16) + 8 + 4
+			else:
+				sprite.set_flip_h(true)
+				position.x = 16 * floor(position.x / 16) + 8 - 4
+			
+			position.y = 16 * ceil((position.y + 9) / 16) - 9 - 5
 	else:
 		ledge_hang = false
 	if (is_on_floor() or is_on_ceiling()):

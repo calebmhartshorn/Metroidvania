@@ -4,9 +4,11 @@ extends Node2D
 onready var viewport = get_viewport()
 
 func _ready():
-	get_tree().connect("screen_resized", self, "_screen_resized")
-	get_node("Enviroment").show()
-
+	var _ignore = get_tree().connect("screen_resized", self, "_screen_resized")
+	get_node("Forground/Enviroment").show()
+	#get_node("Background/Enviroment").show()
+	#get_node("Background").set_scale(Vector2(1/get_node("Background").get_follow_viewport_scale(), 1/get_node("Background").get_follow_viewport_scale()))
+	OS.set_window_maximized(true)
 func _screen_resized():
 	var window_size = OS.get_window_size()
 
