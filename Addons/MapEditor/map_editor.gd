@@ -5,6 +5,7 @@ class_name MapEditor
 
 var Light_Tank = preload("res://Scenes/Light_Tank.tscn")
 var Gauge_1 = preload("res://Scenes/Light_Gauge_1.tscn")
+var Door_1 = preload("res://Scenes/Door_1.tscn")
 
 var map =  preload("res://Map.tres")
 
@@ -126,18 +127,22 @@ func load_room(room_name : String, load_neighbors : bool):
 		var room_node = Node2D.new()
 		var lights_node = Node2D.new()
 		var enemies_node = Node2D.new()
+		var doors_node = Node2D.new()
 		room_node.set_name(room_name)
 		lights_node.set_name("Lights")
 		enemies_node.set_name("Enemies")
+		doors_node.set_name("Doors")
 		
 		room_node.add_child(lights_node)
 		room_node.add_child(enemies_node)
+		room_node.add_child(doors_node)
 		
 		get_node("../LoadedRooms").add_child(room_node)
 		
 		var lights_path = "../LoadedRooms/" + room_name + "/Lights"
 	# warning-ignore:unused_variable
 		var enemies_path = "../LoadedRooms/" + room_name + "/Enemies"
+		var doors_path = "../LoadedRooms/" + room_name + "/Doors"
 		
 		var size_x = get_cell_size().x
 		var size_y = get_cell_size().y
@@ -170,10 +175,17 @@ func load_room(room_name : String, load_neighbors : bool):
 						node.set_position(Vector2(pos.x * size_x + (size_x), pos.y * size_y + (3 * size_y)))
 						get_node(lights_path).add_child(node)
 					if name == "Gauge_1":
-								var node = Gauge_1.instance()
-								node.set_position(Vector2(pos.x * size_x + (0.5 * size_x), pos.y * size_y + (0.5 * size_y)))
-								get_node(lights_path).add_child(node)
-								#set_cell(pos.x, pos.y, -1) #this line remove the tile in TileMap
+						var node = Gauge_1.instance()
+						node.set_position(Vector2(pos.x * size_x + (0.5 * size_x), pos.y * size_y + (0.5 * size_y)))
+						get_node(lights_path).add_child(node)
+						#set_cell(pos.x, pos.y, -1) #this line remove the tile in TileMap
+					if name == "Door_1":
+						var node = Door_1.instance()
+						node.set_position(Vector2(pos.x * size_x + (size_x), pos.y * size_y + (2 * size_y)))
+						node.flip_h = is_cell_x_flipped(pos.x, pos.y)
+						get_node(doors_path).add_child(node)
+						#set_cell(pos.x, pos.y, -1) #this line remove the tile in TileMap
+
 	if load_neighbors:
 		for n in map.map_data[room_name][1]:
 			load_room(str(n), false)
