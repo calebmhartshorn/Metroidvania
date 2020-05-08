@@ -710,6 +710,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 30/z_index = 0
 31/name = "Door_1"
 31/texture = ExtResource( 2 )
+31/normal_map = ExtResource( 1 )
 31/tex_offset = Vector2( 0, 0 )
 31/modulate = Color( 1, 1, 1, 1 )
 31/region = Rect2( 96, 0, 32, 64 )

@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 var gravity = 14.6666
-var speed = 70
+var speed = 50#70
 var jump_vel = 370#200
 var slip = 43
 var wall_jump_cooldown_limit = 0.2
@@ -213,7 +213,7 @@ func _physics_process(delta):
 	get_input()
 	
 	if(Input.is_action_pressed('ui_right') or Input.is_action_pressed('ui_left')):
-		vel.x *= 0.71666
+		vel.x *= 0.8#0.71666
 	else:
 		vel.x *= 0.5 #slip * delta
 	
