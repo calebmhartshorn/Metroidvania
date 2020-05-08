@@ -287,10 +287,11 @@ enabled = true
 cast_to = Vector2( 0, 48 )
 
 [node name="Light2D" type="Light2D" parent="."]
+visible = false
 position = Vector2( 4.54543, -20.4545 )
 texture = ExtResource( 3 )
 texture_scale = 0.5
-energy = 0.7
+energy = 0.5
 range_height = 10.0
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
