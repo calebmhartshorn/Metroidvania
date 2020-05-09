@@ -34,6 +34,8 @@ func _physics_process(_delta):
 	target = player_pos + offset
 	
 	var position_to_room = map.position_to_room(player_pos)
+	if position_to_room == "Null":
+		return
 	var room = map.map_data[position_to_room][0]
 	
 	target.x = max(target.x, room.position.x + (screen_size.x / 2))

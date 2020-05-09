@@ -9,7 +9,7 @@ load_path = "res://.import/Light.png-c0fee3a58f6730d09be8455beddf2dc9.stex"
 
 [node name="Light2D" type="Light2D"]
 texture = ExtResource( 1 )
-texture_scale = 0.3
+texture_scale = 0.6
 color = Color( 1, 0.568627, 0.639216, 1 )
 range_height = 20.0
 script = ExtResource( 2 )

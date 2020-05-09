@@ -3,7 +3,7 @@ extends TileMap
 
 class_name MapEditor
 
-var Light_Tank = preload("res://Scenes/Light_Tank.tscn")
+var Tank_1 = preload("res://Scenes/Tank_1.tscn")
 var Gauge_1 = preload("res://Scenes/Light_Gauge_1.tscn")
 var Door_1 = preload("res://Scenes/Door_1.tscn")
 
@@ -47,7 +47,7 @@ func _set(property, value):
 	# If renaming current room
 	if property == "MapEditor/name":
 		
-		if value == "Null":
+		if value == "null":
 			return true
 		
 		if map.rename_room(current_room, value):
@@ -171,8 +171,8 @@ func load_room(room_name : String, load_neighbors : bool):
 					var name = tileset.tile_get_name(id)
 					
 					if name == "Tank_1":
-						var node = Light_Tank.instance()
-						node.set_position(Vector2(pos.x * size_x + (size_x), pos.y * size_y + (3 * size_y)))
+						var node = Tank_1.instance()
+						node.set_position(Vector2(pos.x * size_x + (size_x), pos.y * size_y + (2 * size_y)))
 						get_node(lights_path).add_child(node)
 					if name == "Gauge_1":
 						var node = Gauge_1.instance()

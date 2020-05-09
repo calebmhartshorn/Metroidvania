@@ -32,7 +32,7 @@ func _process(_delta):
 			if anim.get_assigned_animation() != "Closed->Open" and player.position.x > position.x and anim.get_assigned_animation() != "Open": #and map.position_to_room(player.position) == map.position_to_room(position):
 				anim.play("Closed->Open")
 				open.play()
-	else:
+	elif abs(dif.x) > 1.5 * dist or abs(dif.y) > 1.5 * dist:
 		if flip_h:
 			if anim.get_assigned_animation() != "Open->Closed" and player.position.x < position.x and anim.get_assigned_animation() != "Closed":#  and map.position_to_room(player.position) != map.position_to_room(position):
 				anim.play("Open->Closed")
