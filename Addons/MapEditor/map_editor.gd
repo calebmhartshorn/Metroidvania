@@ -6,6 +6,7 @@ class_name MapEditor
 var Tank_1 = preload("res://Scenes/Tank_1.tscn")
 var Gauge_1 = preload("res://Scenes/Light_Gauge_1.tscn")
 var Door_1 = preload("res://Scenes/Door_1.tscn")
+var Nest_1 = preload("res://Scenes/Nest_1.tscn")
 
 var map =  preload("res://Map.tres")
 
@@ -184,7 +185,11 @@ func load_room(room_name : String, load_neighbors : bool):
 						node.set_position(Vector2(pos.x * size_x + (size_x), pos.y * size_y + (2 * size_y)))
 						node.flip_h = is_cell_x_flipped(pos.x, pos.y)
 						get_node(doors_path).add_child(node)
-						#set_cell(pos.x, pos.y, -1) #this line remove the tile in TileMap
+					if name == "Nest_1":
+						var node = Nest_1.instance()
+						node.set_position(Vector2(pos.x * size_x + (0.5* size_x), pos.y * size_y + (0.5 * size_y)))
+						node.flip_h = is_cell_x_flipped(pos.x, pos.y)
+						get_node(doors_path).add_child(node)
 
 	if load_neighbors:
 		for n in map.map_data[room_name][1]:

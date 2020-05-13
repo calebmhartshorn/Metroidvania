@@ -67,6 +67,7 @@ tracks/0/keys = {
 }
 
 [node name="Sprite" type="Sprite"]
+z_index = 150
 texture = ExtResource( 1 )
 normal_map = ExtResource( 3 )
 hframes = 4

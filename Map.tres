@@ -7,7 +7,8 @@ script = ExtResource( 1 )
 map_data = {
 "Abyss_Room": [ Rect2( 576, -240, 608, 288 ), [ "Main_Room" ] ],
 "Main_Room": [ Rect2( -128, -240, 704, 656 ), [ "Skull_Room", "Abyss_Room" ] ],
+"Nest_Room": [ Rect2( -752, 128, 624, 288 ), [ null, null ] ],
 "Pit_Room": [ Rect2( -1264, -368, 512, 368 ), [ "Skull_Room", "RockTests" ] ],
 "RockTests": [ Rect2( -1776, -368, 512, 288 ), [ "Pit_room", null ] ],
-"Skull_Room": [ Rect2( -752, -320, 624, 736 ), [ "Main_Room" ] ]
+"Skull_Room": [ Rect2( -752, -320, 624, 448 ), [ "Main_Room" ] ]
 }

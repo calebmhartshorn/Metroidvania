@@ -8,7 +8,8 @@ func _ready():
 	get_node("Enviroment").show()
 	#get_node("Background/Enviroment").show()
 	#get_node("Background").set_scale(Vector2(1/get_node("Background").get_follow_viewport_scale(), 1/get_node("Background").get_follow_viewport_scale()))
-	OS.set_window_maximized(true)
+	OS.set_window_maximized(false)
+	Engine.time_scale = 1
 func _screen_resized():
 	var window_size = OS.get_window_size()
 

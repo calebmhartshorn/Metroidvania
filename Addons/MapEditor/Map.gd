@@ -39,6 +39,7 @@ func room_contains_position(pos : Vector2) -> bool:
 		return true
 		
 	# Not Found
+# warning-ignore:unreachable_code
 	return false
 
 func position_to_room(pos : Vector2) -> String:
@@ -49,6 +50,7 @@ func position_to_room(pos : Vector2) -> String:
 		return str(i)
 		
 	# Not Found
+# warning-ignore:unreachable_code
 	return ""
 
 export var map_data = {
