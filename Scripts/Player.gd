@@ -8,7 +8,7 @@ extends KinematicBody2D
 const gravity = 880
 const jump_vel = 370
 const max_speed = 180
-const accel = 1000
+const accel = 800
 const decel = 1200
 
 # sec
@@ -84,8 +84,8 @@ func _physics_process(delta):
 	# Gravity
 	if state == SLIDE:
 		vel.y += 0.1 * gravity * delta
-	elif state == HANG:
-		pass
+#	elif state == HANG:
+#		pass
 	else:
 		vel.y += gravity * delta
 	
@@ -101,17 +101,17 @@ func _physics_process(delta):
 		# Test Stuff
 	if Input.is_action_just_pressed("respawn"):
 		position = Vector2(256,88)
-	$CanvasLayer/Label.set_text(str(states.keys()[state]))
+	$CanvasLayer/Label.set_text("State: " + str(states.keys()[state]))
 
 func manage_states(delta):
 	
 	if is_on_floor():
-		last_jump_x = position.x
+		last_jump_x = 9999999999
 	
 	# Fall
 	if vel.y > 0 and (not is_on_floor()) and not state in [FALL, SLIDE]:
 		state = FALL
-		anim.play("Jump")
+		anim.play("Fall")
 		anim.advance(0.05)
 	
 	# Shoot
@@ -130,8 +130,11 @@ func manage_states(delta):
 		if state == CROUCH:
 			node.position.y = position.y + 10
 		else:
-			node.position.y = position.y - 6
+			node.position.y = position.y - 5
 		get_node('../Bullets').add_child(node)
+		
+		# Vibration
+		Input.start_joy_vibration(0, 0.15, 0, 0.1)
 	
 	# Wall Slide
 	if  (not is_on_floor()) and ray_top.is_colliding() and ray_bottom.is_colliding() and (not ray_down.is_colliding()):
@@ -153,17 +156,27 @@ func manage_states(delta):
 	#Ledge Grab
 	if (not is_on_floor()) and (not ray_top.is_colliding()) and ray_mid.is_colliding() and wall_jump_immobility_timer > 0.1:
 		if (not ray_down_long.is_colliding()):
-			anim.play("Hang")
-			vel.y=0
-			vel.x = 0
-			state = HANG
-			if ray_right.is_colliding():
-				sprite.set_flip_h(false)
-				position.x = 16 * floor(position.x / 16) + 8 + 4
+			
+			var old_pos = position
+			# Snap
+			while not ray_top.is_colliding():
+				position.y += 1
+				ray_top.force_raycast_update()
+			position.y -= 6
+			
+			if old_pos.y < position.y:
+				position.y = old_pos.y
 			else:
-				sprite.set_flip_h(true)
-				position.x = 16 * floor(position.x / 16) + 8 - 4
-			position.y = 16 * ceil((position.y + 9) / 16) - 9 - 5
+				vel.y=0
+				anim.play("Hang")
+				vel.x = 0
+				state = HANG
+				if ray_right.is_colliding():
+					sprite.set_flip_h(false)
+					position.x = 16 * floor(position.x / 16) + 8 + 4
+				else:
+					sprite.set_flip_h(true)
+					position.x = 16 * floor(position.x / 16) + 8 - 4
 	
 	match state:
 		IDLE:
@@ -256,7 +269,7 @@ func manage_states(delta):
 				if not sprite.flip_h:
 					sprite.flip_h = true
 					flip_rays(-1)
-					anim.play("Turn")
+					#anim.play("Turn")
 			if Input.is_action_pressed("ui_right"):
 				
 				vel.x = min(max_speed, vel.x + accel * delta)
@@ -265,7 +278,7 @@ func manage_states(delta):
 				if sprite.flip_h:
 					sprite.flip_h = false
 					flip_rays(1)
-					anim.play("Turn")
+					#anim.play("Turn")
 			
 			# Jump
 			if Input.is_action_just_pressed('jump'):
@@ -371,6 +384,19 @@ func manage_states(delta):
 		
 		HANG:
 			
+#			var old_pos = position
+#			# Snap
+#			while not ray_top.is_colliding():
+#				position.y += 1
+#				ray_top.force_raycast_update()
+#			position.y -= 6
+#
+#			if old_pos.y < position.y:
+#				position.y = old_pos.y
+#			else:
+#				vel.y=0
+#				anim.play("Hang")
+			
 			# Jump
 			if Input.is_action_just_pressed("jump"):
 				
@@ -409,6 +435,7 @@ func play_next_anim(finished):
 				anim.advance(0.05)
 		"Crouch_Turn":
 			anim.play("Crouch")
+
 
 func flip_rays(value):
 	ray_top.set_cast_to(Vector2(value * ray_length, 0))
