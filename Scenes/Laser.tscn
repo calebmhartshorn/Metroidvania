@@ -1,8 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Assets/Animations/Laser.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Graphics/Player/Laser.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Laser.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Enviroment/Light.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Graphics/VFX/Light.png" type="Texture" id=3]
+
+
 
 [sub_resource type="Animation" id=1]
 resource_name = "Explode"
@@ -39,10 +41,11 @@ tracks/0/keys = {
 [node name="Laser" type="Sprite"]
 texture = ExtResource( 1 )
 hframes = 4
-frame = 2
+frame = 1
 script = ExtResource( 2 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+visible = false
 rect = Rect2( -20, -2, 40, 4 )
 
 [node name="Light2D" type="Light2D" parent="."]
@@ -53,6 +56,7 @@ color = Color( 0.372549, 0.921569, 0.996078, 1 )
 energy = 2.0
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
+visible = false
 position = Vector2( -15, 0 )
 enabled = true
 cast_to = Vector2( 15, 0 )
@@ -60,3 +64,8 @@ cast_to = Vector2( 15, 0 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Explode = SubResource( 1 )
 anims/Shoot = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 1, 0.5 )
+texture = ExtResource( 1 )
+hframes = 4

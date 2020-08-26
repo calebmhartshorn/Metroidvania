@@ -1,9 +1,11 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Assets/Enviroment/Tank_1.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Graphics/Environment/Tank_1.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Light_Tank.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Assets/Enviroment/Tank_1_Normals.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Graphics/Environment/Tank_1_Normals.png" type="Texture" id=3]
 [ext_resource path="res://Scripts/Tank_1.gd" type="Script" id=4]
+
+
 
 [sub_resource type="Animation" id=1]
 resource_name = "Bubbles"
@@ -35,6 +37,7 @@ frame = 1
 script = ExtResource( 4 )
 
 [node name="Light2D" parent="." instance=ExtResource( 2 )]
+texture_scale = 1.25
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Bubbles = SubResource( 1 )

@@ -35,6 +35,8 @@ func _process(delta):
 		else:
 			position.x += speed * delta
 	
+	get_node("Sprite").set_position(Vector2(0, sin(OS.get_ticks_msec() * 0.05) * 3))
+	
 	# First Check
 	if get_node("RayCast2D").is_colliding():
 		hit = true

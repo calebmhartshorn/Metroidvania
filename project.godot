@@ -28,6 +28,7 @@ _global_script_class_icons={
 
 config/name="Metroidvania"
 run/main_scene="res://Scenes/Main.tscn"
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://Assets/Icon.png"
 
 [display]
@@ -112,5 +113,4 @@ quality/shadows/filter_mode=0
 quality/reflections/texture_array_reflections=false
 quality/reflections/high_quality_ggx=false
 environment/default_clear_color=Color( 0, 0, 0, 1 )
-environment/default_environment="res://Assets/Enviroment/default_env.tres"
 quality/dynamic_fonts/use_oversampling=false

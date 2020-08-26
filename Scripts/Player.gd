@@ -84,8 +84,8 @@ func _physics_process(delta):
 	# Gravity
 	if state == SLIDE:
 		vel.y += 0.1 * gravity * delta
-#	elif state == HANG:
-#		pass
+	elif state == HANG:
+		pass
 	else:
 		vel.y += gravity * delta
 	
@@ -101,7 +101,7 @@ func _physics_process(delta):
 		# Test Stuff
 	if Input.is_action_just_pressed("respawn"):
 		position = Vector2(256,88)
-	$CanvasLayer/Label.set_text("State: " + str(states.keys()[state]))
+	#$CanvasLayer/Label.set_text("State: " + str(states.keys()[state]))
 
 func manage_states(delta):
 	
@@ -109,13 +109,13 @@ func manage_states(delta):
 		last_jump_x = 9999999999
 	
 	# Fall
-	if vel.y > 0 and (not is_on_floor()) and not state in [FALL, SLIDE]:
+	if vel.y > 0 and (not is_on_floor()) and not state in [FALL, SLIDE, HANG]:
 		state = FALL
 		anim.play("Fall")
 		anim.advance(0.05)
 	
 	# Shoot
-	if Input.is_action_just_pressed("Shoot") and shoot_timer > shoot_time:
+	if Input.is_action_just_pressed("Shoot") and shoot_timer > shoot_time and not state in [SLIDE, HANG]:
 		shoot_timer = 0
 		get_node("AudioStreamPlayer").play()
 		var node = Laser.instance()
@@ -130,14 +130,15 @@ func manage_states(delta):
 		if state == CROUCH:
 			node.position.y = position.y + 10
 		else:
-			node.position.y = position.y - 5
+			node.position.y = position.y - 7
 		get_node('../Bullets').add_child(node)
 		
 		# Vibration
-		Input.start_joy_vibration(0, 0.15, 0, 0.1)
+		Input.start_joy_vibration(0, 0.15, 0, 0.2)
+		get_node('../CanvasLayer/TextureRect').get_material().set_shader_param("Flip", true)
 	
 	# Wall Slide
-	if  (not is_on_floor()) and ray_top.is_colliding() and ray_bottom.is_colliding() and (not ray_down.is_colliding()):
+	if  (not is_on_floor()) and ray_top.is_colliding() and ray_bottom.is_colliding() and (not ray_down.is_colliding()) and (not state in [HANG]):
 		if abs(position.x - last_jump_x) > 8:
 			anim.play("Slide")
 			last_jump_x = position.x
@@ -153,12 +154,12 @@ func manage_states(delta):
 				sprite.set_flip_h(true)
 				position.x = 16 * floor(position.x / 16) + 8 - 4
 	
-	#Ledge Grab
-	if (not is_on_floor()) and (not ray_top.is_colliding()) and ray_mid.is_colliding() and wall_jump_immobility_timer > 0.1:
-		if (not ray_down_long.is_colliding()):
+	# Ledge Grab
+	if (not is_on_floor()) and (not ray_top.is_colliding()) and ray_mid.is_colliding() and (not ray_down_long.is_colliding()) and wall_jump_immobility_timer > 0.1:
+		if (vel.x > 0 and Input.is_action_pressed("ui_right")) or (vel.x < 0 and Input.is_action_pressed("ui_left")):
 			
-			var old_pos = position
 			# Snap
+			var old_pos = position
 			while not ray_top.is_colliding():
 				position.y += 1
 				ray_top.force_raycast_update()
@@ -384,19 +385,6 @@ func manage_states(delta):
 		
 		HANG:
 			
-#			var old_pos = position
-#			# Snap
-#			while not ray_top.is_colliding():
-#				position.y += 1
-#				ray_top.force_raycast_update()
-#			position.y -= 6
-#
-#			if old_pos.y < position.y:
-#				position.y = old_pos.y
-#			else:
-#				vel.y=0
-#				anim.play("Hang")
-			
 			# Jump
 			if Input.is_action_just_pressed("jump"):
 				
@@ -435,7 +423,6 @@ func play_next_anim(finished):
 				anim.advance(0.05)
 		"Crouch_Turn":
 			anim.play("Crouch")
-
 
 func flip_rays(value):
 	ray_top.set_cast_to(Vector2(value * ray_length, 0))

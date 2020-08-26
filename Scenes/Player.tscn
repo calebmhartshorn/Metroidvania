@@ -1,9 +1,14 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://Assets/Animations/Player_SS.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Graphics/Player/Player_SS.png" type="Texture" id=1]
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Enviroment/Light.png" type="Texture" id=3]
-[ext_resource path="res://Assets/Sounds/Laser_1.wav" type="AudioStream" id=4]
+[ext_resource path="res://Assets/Graphics/VFX/Light.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Audio/Laser_1.wav" type="AudioStream" id=4]
+[ext_resource path="res://Assets/Graphics/Player/Player_SS_Normals.png" type="Texture" id=5]
+
+
+
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 4, 23 )
@@ -236,10 +241,12 @@ z_index = 50
 script = ExtResource( 2 )
 
 [node name="Bounds" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 1 )
 shape = SubResource( 1 )
 
 [node name="Rays" type="Node2D" parent="."]
+visible = false
 
 [node name="Ray_Top" type="RayCast2D" parent="Rays"]
 position = Vector2( 0, -24 )
@@ -272,11 +279,13 @@ enabled = true
 cast_to = Vector2( 0, 48 )
 
 [node name="Sprite" type="Sprite" parent="."]
-modulate = Color( 0.564706, 0.564706, 0.564706, 1 )
+light_mask = 17
 texture = ExtResource( 1 )
+normal_map = ExtResource( 5 )
+flip_h = true
 vframes = 10
 hframes = 10
-frame = 33
+frame = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
 anims/Climb = SubResource( 2 )
@@ -294,11 +303,12 @@ anims/Slide = SubResource( 13 )
 anims/Turn = SubResource( 14 )
 
 [node name="Light2D" type="Light2D" parent="."]
-position = Vector2( 4.54543, -20.4545 )
+position = Vector2( 0, -35 )
 texture = ExtResource( 3 )
-texture_scale = 0.75
-energy = 0.5
-range_height = 10.0
+texture_scale = 0.5
+energy = 0.6
+range_height = 20.0
+range_item_cull_mask = 16
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
