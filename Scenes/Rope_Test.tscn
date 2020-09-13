@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Graphics/Environment/Pipe_Section.png" type="Texture" id=1]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+position = Vector2( 58.2711, -4.75684 )
+texture = ExtResource( 1 )
+polygon = PoolVector2Array( 0, 0, 0, 16, 26.1659, 25.8437, 16, 0 )

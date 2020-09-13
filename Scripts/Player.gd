@@ -135,7 +135,7 @@ func manage_states(delta):
 		
 		# Vibration
 		Input.start_joy_vibration(0, 0.15, 0, 0.2)
-		get_node('../CanvasLayer/TextureRect').get_material().set_shader_param("Flip", true)
+		get_node('../UI/TextureRect').get_material().set_shader_param("Flip", true)
 	
 	# Wall Slide
 	if  (not is_on_floor()) and ray_top.is_colliding() and ray_bottom.is_colliding() and (not ray_down.is_colliding()) and (not state in [HANG]):

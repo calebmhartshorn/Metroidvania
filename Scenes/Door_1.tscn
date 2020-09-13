@@ -6,10 +6,6 @@
 [ext_resource path="res://Assets/Audio/Door_Open.wav" type="AudioStream" id=4]
 [ext_resource path="res://Assets/Audio/Door_Close.wav" type="AudioStream" id=5]
 
-
-
-
-
 [sub_resource type="Animation" id=1]
 resource_name = "Closed"
 tracks/0/type = "value"
@@ -71,6 +67,7 @@ tracks/0/keys = {
 }
 
 [node name="Sprite" type="Sprite"]
+visible = false
 z_index = 150
 texture = ExtResource( 1 )
 normal_map = ExtResource( 3 )
